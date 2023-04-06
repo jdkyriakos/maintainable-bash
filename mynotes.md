@@ -6,7 +6,7 @@
 - ./1_init/3.1_parameters/good.sh
 - ./1_init/3.3_default-values/better.sh
 - ./1_init/4_assumptions/better.sh
-- ./2_execution/8_log-files/blah.sh 
+-  ./2_execution/8_log-files/blah.sh  
 - ./3_completion/6_return-status/better.sh
 - ./4_maintainability/13_readability/example.sh
 

@@ -1,36 +1,40 @@
 #!/usr/bin/env bash
 
+
+inputFile="./resources/input.txt"
+jackFile="./resources/jack-and-jill.txt"
 problem1() {
     # print just the first two lines of the file resources/input.txt
-    :
+   head -n 2 $inputFile 
 }
 
-problem2() {
+ problem3 () {
     # print everything except the first two lines of the file resources/input.txt
-    :
+    tail -n +2 $inputFile
 }
+
 
 problem3() {
     # print only the last three lines of the file resources/input.txt
-    :
+   tail -n 3 $inputFile 
 }
 
 problem4() {
     # print everything except the last three lines of the file resources/input.txt
-
+    head -n +3 $inputFile
     # on standard linux
     :
 }
 
 problem5() {
     # print only lines containing jack in resources/jack-and-jill.txt
-    :
+    grep 'jack' $jackFile
 }
 
 problem6() {
     # replace jill with bill in resources/jack-and-jill.txt, without modifying the file,
     # print to console
-    :
+    sed  "s/jill/bill/g" $jackFile
 }
 
 problem7() {
@@ -38,25 +42,27 @@ problem7() {
     # have two solutions:
     # one that doesn't consider white space on lines, and one that does.
 
-    :
+    sed  '/^$/d' $jackFile
+    
 }
 
 problem8() {
     # print the file resources/jack-and-jill.txt all on a single line
-    :
+    cat $jackFile | tr -d '\n'
+
 }
 
 problem9() {
     # list only the directories (names only, one on each line) in the current directory
     # include hidden directories.
     # there are many solutions to this, mine is 50 characters long.
-    :
+    for f in $(ls); do [[ -d $f ]] && echo  "$f"; done
 }
 
 problem10() {
     # write a command that succeeds (return status is 0) only if it is run in the afternoon/evening.
     # hint: my answer is 24 characters long.
-    :
+    [ "$(date +%H)" -ge 12 ]
 }
 
 problem11() {
@@ -66,20 +72,38 @@ problem11() {
     # the JSON should be pretty printed, you can use jq or not.
     # make sure the last value is not followed by a comma.
     # note: this is tougher than it sounds.
-    :
+    grpTxt=${1:-=}
+    printCommaFlag=false
+    echo '{' 
+    for var in $(env | grep "$grpTxt" ) ; do
+
+           if $printCommaFlag ; then
+               echo -n ","
+               echo -e '\n'
+           else
+               printCommaFlag=true
+           fi
+        cat <<< "$var" | awk -F'=' '{printf("\"%s\":\"%s\"", $1, $2)}'
+
+    done
+
+    echo  '}' 
 }
 
 problem12() {
     # in a directory, print the top ten files by their size, in descending order by size.  The output
     # can have <file_size> <file> in each line.  Include headers and have the output formatted nice so the columns line up.
     # you can just assume the size column width is at most 10 characters wide.
-    :
+    echo -e "h1\th2"
+    f=$(ls -lA ./ | grep -vE '^[d|total]' | cut --delimiter=' ' --fields=5,11 | sort -nr )
+    
+    cat <<< "$f"
 }
 
 problem13() {
     # print the mounted drives names, capacity, and mount directory
     # your answer may vary based on your operating system.
-    :
+    df | awk '{print $1, $5, $NF}'
 }
 
 problem14() {
@@ -220,5 +244,5 @@ EOF
     # print the date of birth, first name, and last name of all the men, in descending order by DoB.
     # print it out as a table with a header, formatted nice.
     # use jq, don't use grep.
-    :
+   cat <<< $data | jq '.items[] | select(.type=="person")  | select(.sex=="male") | [.type,.dob,.name.first + " " + .name.last,.sex]'
 }
